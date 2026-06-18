@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0D3B42">
+<title>צפון איטליה 2026 · תוכנית טיול</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4F1E9;--card:#FFFFFF;--ink:#1C2A2C;--muted:#5E726F;
+    --lake:#124E57;--lake-deep:#0D3B42;--water:#2F8B8C;--sage:#6E8F66;
+    --granite:#C2856A;--gold:#D8A33F;--gold-soft:#F0D9A4;
+    --line:rgba(18,78,87,.14);--line-strong:rgba(18,78,87,.26);
+    --shadow:0 10px 30px -12px rgba(13,59,66,.30);--r:18px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{font-family:"Heebo",system-ui,sans-serif;background:var(--paper);color:var(--ink);
+    line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:680px;margin:0 auto;padding:0 0 60px}
+
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  .hero svg{display:block;width:100%;height:auto}
+  .hero .sun{transition:transform 1.1s cubic-bezier(.22,1,.36,1)}
+  .hero-text{position:absolute;inset:auto 0 0 0;padding:18px 22px 20px;
+    background:linear-gradient(180deg,rgba(13,59,66,0) 0%,rgba(13,59,66,.55) 100%)}
+  .eyebrow{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-soft);font-weight:600;margin:0 0 4px}
+  .hero h1{font-family:"Frank Ruhl Libre",serif;font-weight:900;color:#fff;margin:0;
+    font-size:clamp(30px,9vw,42px);line-height:1.05;text-shadow:0 2px 18px rgba(0,0,0,.25)}
+  .hero .sub{color:rgba(255,255,255,.92);font-size:14px;margin:6px 0 0;font-weight:400}
+
+  .progress-strip{display:flex;align-items:center;gap:12px;padding:14px 20px;background:var(--lake-deep);color:#fff}
+  .progress-strip .label{font-size:13px;font-weight:500;white-space:nowrap;opacity:.92}
+  .bar{flex:1;height:8px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden}
+  .bar > i{display:block;height:100%;width:0;border-radius:99px;
+    background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .6s cubic-bezier(.22,1,.36,1)}
+  .pct{font-variant-numeric:tabular-nums;font-weight:700;font-size:14px;min-width:38px;text-align:left}
+
+  .tabs{position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:1px solid var(--line);
+    padding:10px 14px;padding-top:max(10px,env(safe-area-inset-top))}
+  .tabs-row{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x proximity;
+    -ms-overflow-style:none;scrollbar-width:none;padding-bottom:2px}
+  .tabs-row::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto;scroll-snap-align:start;cursor:pointer;border:1px solid var(--line-strong);
+    background:var(--card);border-radius:14px;padding:8px 12px;min-height:54px;
+    display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--muted);
+    transition:.2s;position:relative;min-width:64px}
+  .tab .ic{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6}
+  .tab .d-num{font-family:"Frank Ruhl Libre",serif;font-weight:700;font-size:15px;line-height:1}
+  .tab .d-date{font-size:10.5px;font-weight:500;letter-spacing:.01em}
+  .tab[aria-selected="true"]{background:var(--lake);border-color:var(--lake);color:#fff;
+    box-shadow:0 8px 18px -10px rgba(18,78,87,.7)}
+  .tab .ring{position:absolute;top:5px;left:5px;width:16px;height:16px;border-radius:99px;
+    border:2px solid var(--line-strong);display:grid;place-items:center;font-size:9px}
+  .tab[aria-selected="true"] .ring{border-color:rgba(255,255,255,.5)}
+  .tab.complete .ring{background:var(--gold);border-color:var(--gold);color:#fff}
+
+  .search-wrap{display:flex;align-items:center;gap:8px;margin-top:9px;background:var(--card);
+    border:1px solid var(--line-strong);border-radius:12px;padding:8px 12px}
+  .search-wrap .s-ic{flex:0 0 auto;display:grid;place-items:center}
+  .search-wrap .s-ic svg{width:17px;height:17px;stroke:var(--muted);fill:none;stroke-width:1.8}
+  .search-wrap input{flex:1;border:0;background:transparent;font-family:inherit;font-size:14.5px;color:var(--ink);min-width:0}
+  .search-wrap input:focus{outline:none}
+  .search-wrap input::placeholder{color:var(--muted)}
+  #searchClear{flex:0 0 auto;background:none;border:0;cursor:pointer;color:var(--muted);padding:4px;display:grid;place-items:center}
+  #searchClear svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+
+  .panel{display:none;padding:20px 16px 8px;animation:fade .35s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .day-head{margin:0 4px 16px}
+  .day-head h2{font-family:"Frank Ruhl Libre",serif;font-weight:900;font-size:26px;margin:0;color:var(--lake-deep);line-height:1.15}
+  .day-head .area{color:var(--muted);font-size:14px;margin-top:4px;display:flex;gap:6px;align-items:center}
+  .day-head .area svg{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:1.7;flex:0 0 auto}
+  .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .badge{font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:99px;display:inline-flex;align-items:center;gap:5px;border:1px solid transparent}
+  .badge svg{width:13px;height:13px;stroke-width:1.8;fill:none}
+  .badge.move{background:rgba(47,139,140,.12);color:#0f5e60;border-color:rgba(47,139,140,.28)}
+  .badge.move svg{stroke:#0f5e60}
+  .badge.cost{background:rgba(194,133,106,.14);color:#9c5839;border-color:rgba(194,133,106,.32)}
+  .badge.cost svg{stroke:#9c5839}
+
+  .step{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden}
+  .step-main{display:flex;align-items:stretch}
+  .check{flex:0 0 56px;display:flex;align-items:flex-start;justify-content:center;padding-top:18px;cursor:pointer;
+    border-left:1px solid var(--line);background:linear-gradient(180deg,rgba(244,241,233,.5),rgba(244,241,233,0))}
+  .check .box{width:26px;height:26px;border-radius:9px;border:2px solid var(--line-strong);display:grid;place-items:center;transition:.2s;background:#fff}
+  .check .box svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0;transform:scale(.4);transition:.2s}
+  .step.done .check .box{background:var(--gold);border-color:var(--gold)}
+  .step.done .check .box svg{opacity:1;transform:scale(1)}
+  .step-body{flex:1;padding:14px 14px 14px 6px;min-width:0}
+  .step .time{font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--water);text-transform:uppercase;margin-bottom:2px}
+  .step .title{font-weight:600;font-size:16.5px;color:var(--ink);transition:.2s}
+  .step.done .title{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line-strong)}
+  .step .desc{font-size:13.5px;color:var(--muted);margin-top:3px}
+  .step .meta{display:flex;flex-direction:column;gap:5px;margin-top:10px}
+  .mline{font-size:12.5px;color:var(--muted);display:flex;gap:7px;align-items:flex-start}
+  .mline .mi{flex:0 0 16px;width:16px;height:16px;margin-top:2px;stroke:var(--sage);fill:none;stroke-width:1.7}
+  .mline.kosher .mi{stroke:var(--granite)}
+  .nav-btn{display:inline-flex;align-items:center;gap:7px;margin-top:12px;background:var(--lake);color:#fff;
+    text-decoration:none;font-size:13.5px;font-weight:600;padding:9px 14px;border-radius:12px;transition:.15s}
+  .nav-btn:active{transform:scale(.97);background:var(--lake-deep)}
+  .nav-btn svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.8}
+
+  .meals{background:rgba(110,143,102,.07);border:1px solid rgba(110,143,102,.25);border-radius:var(--r);overflow:hidden;margin:2px 2px 18px}
+  .meals h3{font-family:"Frank Ruhl Libre",serif;font-size:15px;margin:0;padding:12px 16px;color:#46603f;
+    display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(110,143,102,.2)}
+  .meals h3 svg{width:18px;height:18px;stroke:var(--sage);fill:none;stroke-width:1.7}
+  .meal-row{display:flex;gap:10px;padding:9px 16px;font-size:13.5px;border-top:1px solid rgba(110,143,102,.14)}
+  .meal-row:first-of-type{border-top:0}
+  .meal-row .ml{font-weight:700;color:#46603f;min-width:54px;flex:0 0 auto}
+  .meal-row .mv{color:var(--muted)}
+
+  .notes{background:rgba(255,255,255,.6);border:1px dashed var(--line-strong);border-radius:var(--r);padding:14px 16px;margin:4px 2px 18px}
+  .notes h3{font-family:"Frank Ruhl Libre",serif;font-size:15px;margin:0 0 8px;color:var(--lake-deep)}
+  .note-item{display:flex;gap:9px;font-size:13px;color:var(--muted);margin-bottom:7px;align-items:flex-start}
+  .note-item:last-child{margin-bottom:0}
+  .note-item b{color:var(--ink);font-weight:600}
+  .note-item .ni{flex:0 0 17px;width:17px;height:17px;margin-top:1px;stroke-width:1.7;fill:none}
+  .ni.rain{stroke:var(--water)}.ni.tired{stroke:var(--granite)}.ni.faith{stroke:var(--gold)}
+  .ni.car,.ni.park,.ni.pin{stroke:var(--lake)}.ni.food{stroke:var(--granite)}
+
+  .divider{display:flex;align-items:center;justify-content:center;margin:8px 0 16px;opacity:.5}
+  .divider svg{width:80px;height:14px;stroke:var(--lake);fill:none;stroke-width:1.4}
+
+  .leadin{font-size:14px;color:var(--muted);margin:0 4px 16px;line-height:1.6}
+  .leadin b{color:var(--ink)}
+  .list-progress{display:flex;align-items:center;gap:10px;margin:4px 2px 18px}
+  .list-progress .bar2{flex:1;height:7px;border-radius:99px;background:var(--line);overflow:hidden}
+  .list-progress .bar2 i{display:block;height:100%;width:0;background:var(--sage);transition:.5s;border-radius:99px}
+  .list-progress .t{font-size:12.5px;color:var(--muted);font-weight:600;white-space:nowrap}
+
+  .kit-group{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden}
+  .kit-group > h3{font-family:"Frank Ruhl Libre",serif;font-weight:700;font-size:16px;margin:0;padding:14px 16px;
+    background:linear-gradient(180deg,rgba(18,78,87,.05),rgba(18,78,87,0));border-bottom:1px solid var(--line);
+    display:flex;align-items:center;gap:9px;color:var(--lake-deep)}
+  .kit-group > h3 svg{width:20px;height:20px;stroke:var(--lake);fill:none;stroke-width:1.6}
+  .kit-item{display:flex;align-items:center;border-bottom:1px solid var(--line)}
+  .kit-item:last-of-type{border-bottom:0}
+  .kit-tap{flex:1;display:flex;align-items:center;gap:12px;cursor:pointer;padding:12px 16px;min-height:48px;min-width:0}
+  .kit-tap .box{flex:0 0 24px;width:24px;height:24px;border-radius:8px;border:2px solid var(--line-strong);display:grid;place-items:center;transition:.2s;background:#fff}
+  .kit-tap .box svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:.15s}
+  .kit-item.done .box{background:var(--sage);border-color:var(--sage)}
+  .kit-item.done .box svg{opacity:1}
+  .kit-tap .lbl{font-size:14.5px;transition:.2s;word-break:break-word}
+  .kit-item.done .lbl{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line-strong)}
+  .del-btn{flex:0 0 auto;background:none;border:0;padding:12px 14px;cursor:pointer;color:var(--muted);opacity:.4;transition:.15s}
+  .del-btn:active{opacity:1;color:var(--granite)}
+  .del-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+  .add-row{display:flex;gap:8px;align-items:center;padding:10px 14px;background:rgba(18,78,87,.03);border-top:1px solid var(--line)}
+  .add-row input{flex:1;border:1px solid var(--line-strong);border-radius:10px;padding:9px 12px;font-family:inherit;font-size:14px;background:#fff;color:var(--ink);min-width:0}
+  .add-row input:focus{outline:none;border-color:var(--water);box-shadow:0 0 0 2px rgba(47,139,140,.18)}
+  .add-btn{flex:0 0 auto;width:38px;height:38px;border-radius:10px;border:0;background:var(--lake);color:#fff;display:grid;place-items:center;cursor:pointer}
+  .add-btn:active{transform:scale(.95)}
+  .add-btn svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.2}
+
+  .result-card{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:right;
+    background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
+    padding:13px 15px;margin-bottom:10px;cursor:pointer;font-family:inherit}
+  .result-card:active{transform:scale(.99)}
+  .result-card > svg{flex:0 0 auto;width:22px;height:22px;stroke:var(--lake);fill:none;stroke-width:1.6;margin-top:1px}
+  .result-card .r-text{font-weight:600;font-size:15.5px;color:var(--ink)}
+  .result-card .r-text.done{color:var(--muted);text-decoration:line-through}
+  .result-card .r-sub{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .result-card .r-loc{font-size:11.5px;color:var(--water);font-weight:600;margin-top:5px}
+  mark{background:var(--gold-soft);color:var(--ink);border-radius:3px;padding:0 2px}
+
+  footer{text-align:center;padding:26px 20px 10px;color:var(--muted);font-size:12px}
+  .reset{background:none;border:1px solid var(--line-strong);color:var(--muted);font-family:inherit;font-size:12.5px;
+    padding:8px 16px;border-radius:99px;cursor:pointer;margin-bottom:10px}
+  .reset:active{background:var(--line)}
+  .disclaim{font-size:11px;opacity:.8;max-width:440px;margin:8px auto 0;line-height:1.5}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <svg viewBox="0 0 400 230" preserveAspectRatio="xMidYMid slice" role="img" aria-label="שקיעה מעל האגם">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#1D6E73"/><stop offset=".45" stop-color="#4E9790"/>
+          <stop offset=".55" stop-color="#E7B463"/><stop offset="1" stop-color="#D98E54"/>
+        </linearGradient>
+        <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#2E7E83"/><stop offset="1" stop-color="#103E45"/>
+        </linearGradient>
+        <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0" stop-color="#FFE9B8" stop-opacity=".9"/><stop offset="1" stop-color="#FFE9B8" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="400" height="230" fill="url(#sky)"/>
+      <g class="sun" transform="translate(0,40)">
+        <circle cx="300" cy="120" r="46" fill="url(#glow)"/><circle cx="300" cy="120" r="20" fill="#FFE5AE"/>
+      </g>
+      <path d="M0,150 L40,118 L80,138 L130,100 L175,134 L215,110 L260,140 L310,108 L355,136 L400,120 L400,170 L0,170 Z" fill="#0F4B52" opacity=".55"/>
+      <path d="M0,162 L55,134 L110,156 L160,128 L210,152 L265,130 L320,154 L370,138 L400,150 L400,175 L0,175 Z" fill="#0C3B42" opacity=".7"/>
+      <rect y="160" width="400" height="70" fill="url(#water)"/>
+      <g fill="#0A3138">
+        <ellipse cx="120" cy="186" rx="30" ry="7"/><rect x="112" y="172" width="5" height="14"/><rect x="120" y="168" width="6" height="18"/><rect x="128" y="174" width="4" height="12"/>
+        <ellipse cx="250" cy="194" rx="22" ry="6"/><rect x="244" y="182" width="5" height="12"/><rect x="251" y="184" width="4" height="10"/>
+      </g>
+      <g stroke="#EAD9B5" stroke-width="1.4" fill="none" opacity=".85">
+        <path d="M186,205 q9,7 18,0 Z" fill="#EAD9B5"/><path d="M195,205 L195,193 M195,193 L203,201 L195,201"/>
+      </g>
+      <line x1="300" y1="172" x2="300" y2="225" stroke="#FFE5AE" stroke-width="6" opacity=".18"/>
+    </svg>
+    <div class="hero-text">
+      <p class="eyebrow">Lago Maggiore · Lago d'Orta</p>
+      <h1>צפון איטליה</h1>
+      <p class="sub">חמישה ימים · בוואנו · טיול זוגי שומר כשרות</p>
+    </div>
+  </header>
+
+  <div class="progress-strip">
+    <span class="label">מה כבר עשינו</span>
+    <div class="bar"><i id="overallBar"></i></div>
+    <span class="pct" id="overallPct">0%</span>
+  </div>
+
+  <nav class="tabs" aria-label="ניווט">
+    <div class="tabs-row" id="tabsRow" role="tablist"></div>
+    <div class="search-wrap">
+      <span class="s-ic"></span>
+      <input id="searchInput" type="search" inputmode="search" placeholder="חיפוש ביעדים, פריטים ומסמכים…" aria-label="חיפוש">
+      <button id="searchClear" hidden aria-label="ניקוי חיפוש"></button>
+    </div>
+  </nav>
+
+  <main id="panels"></main>
+
+  <footer>
+    <button class="reset" id="resetBtn">איפוס כל הסימונים</button>
+    <p class="disclaim">התוכנית מבוססת על הקובץ שהעליתם. הסימונים והפריטים שמוסיפים נשמרים במכשיר זה בלבד. כדאי לאמת שעות, מחירים וזמני שייט סמוך לתאריך.</p>
+  </footer>
+</div>
+
+<script>
+const I={
+  plane:'<path d="M3 12l18-6-5 18-4-7-9-5z"/>',
+  boat:'<path d="M3 14l9-3 9 3-2 5H5l-2-5z"/><path d="M12 11V5l5 3-5 3"/>',
+  flower:'<circle cx="12" cy="12" r="2.5"/><path d="M12 9.5c0-2 1.2-3.5 0-5-1.2 1.5 0 3 0 5zM12 14.5c0 2-1.2 3.5 0 5 1.2-1.5 0-3 0-5zM9.5 12c-2 0-3.5-1.2-5 0 1.5 1.2 3 0 5 0zM14.5 12c2 0 3.5 1.2 5 0-1.5-1.2-3 0-5 0z"/>',
+  village:'<path d="M4 21h16M7 21v-9l5-4 5 4v9M12 8V4M10 6h4"/><path d="M10 21v-4h4v4"/>',
+  bag:'<path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8a3 3 0 0 1 6 0"/>',
+  doc:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/>',
+  cart:'<circle cx="9" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/><path d="M3 4h2l2.2 11h10l2-8H6"/>',
+  check:'<polyline points="4 12 9 17 20 6"/>',
+  pin:'<path d="M12 21s-6-5.5-6-10a6 6 0 1 1 12 0c0 4.5-6 10-6 10z"/><circle cx="12" cy="11" r="2"/>',
+  car:'<path d="M5 11l1.5-4.5h11L19 11M5 11h14v5H5z"/><circle cx="8" cy="16" r="1.5"/><circle cx="16" cy="16" r="1.5"/>',
+  park:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 16V8h3.5a2.5 2.5 0 0 1 0 5H9"/>',
+  food:'<path d="M6 3v8a3 3 0 0 0 6 0V3M9 3v18M18 3c-2 0-3 2-3 5s1 4 3 4v9"/>',
+  ticket:'<path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2 2 2 0 0 0 0 4 2 2 0 0 1-2 2H5a2 2 0 0 1-2-2 2 2 0 0 0 0-4z"/>',
+  tired:'<circle cx="12" cy="12" r="9"/><path d="M8 10h2M14 10h2M9 15.5c1-1 5-1 6 0"/>',
+  faith:'<path d="M12 3v18M5 8h14M7 8l5 6 5-6"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/>'
+};
+const svg=(p,cls='')=>`<svg class="${cls}" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const maps=d=>`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(d)}`;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function hl(text,q){
+  if(!q)return esc(text);
+  const i=text.toLowerCase().indexOf(q.toLowerCase());
+  if(i<0)return esc(text);
+  return esc(text.slice(0,i))+'<mark>'+esc(text.slice(i,i+q.length))+'</mark>'+esc(text.slice(i+q.length));
+}
+
+const DAYS=[
+ {id:'d1',num:"א'",tag:'נחיתה',icon:I.plane,title:'נחיתה והגעה',area:'מלפנסה ← בוואנו',move:'~60 דק׳ מהשדה',
+  steps:[
+   {t:'18:40',title:'נחיתה במלפנסה',desc:'ביקורת דרכונים, מזוודות ואיסוף הרכב (19:30–20:15).',
+    map:'Malpensa Airport Terminal 1',meta:[['car','איסוף מיורופקאר: לבקש WiFi, לצלם ולהסריט, לברר דלק וכבישי אגרה']]},
+   {t:'20:15–21:15',title:'נסיעה לבוואנו',desc:'כשעה נסיעה אל הדירה.',
+    map:'Largo U. Locatelli 6 Baveno Italy',meta:[['pin','Largo U. Locatelli 6, Baveno · אמורה להיות חניה חינם']]},
+   {t:'21:15–21:45',title:'הגעה לדירה וצ׳ק-אין',desc:'התארגנות ראשונית.'},
+   {title:'הליכה קצרה בטיילת',desc:'אם נשאר כוח — סיבוב קצר על שפת האגם.'},
+   {title:'ארוחת ערב בדירה',desc:'משהו קליל מהבית (אפשר גם מנה חמה או קופסה).',
+    meta:[['food','בתפריט: פיצה כשרה ממילאנו כאופציה']],kosher:true}
+  ],
+  meals:{b:'בבית — קליל',l:'כריכים עם קציצות (בנתב״ג)',d:'פיצה כשרה / משהו בדירה'},
+  notes:[['tired','טיפ:','מגיעים מאוחר — לדחות פריקה גדולה לבוקר שאחרי.'],
+         ['faith','כשרות:','ארוחת ערב בדירה — כלים מהבית.']]},
+
+ {id:'d2',num:"ב'",tag:'האיים',icon:I.boat,title:'האיים הבורומאיים',area:'שייט מבוואנו · 3 איים',move:'שייט מבוואנו',cost:'~18$ לאדם',
+  steps:[
+   {t:'09:15',title:'הגעה לרציף בבוואנו',desc:'להגיע בסביבות 9:00 כדי למצוא חניה בקלות.',
+    map:'Navigazione Lago Maggiore scalo di Baveno Piazza Matteotti',
+    meta:[['park','Parcheggio Imbarcadero Baveno · חניה בתשלום במדחן'],['ticket','כרטיס Hop-On Hop-Off ל-3 האיים · ~18$ לאדם']]},
+   {t:'09:30–09:45',title:'סירה אל Isola Bella'},
+   {t:'09:45–12:00',title:'Isola Bella — ארמון וגנים',map:'Isola Bella Stresa'},
+   {t:'12:15–14:00',title:'Isola dei Pescatori — צהריים ושיטוט',map:'Isola dei Pescatori',
+    meta:[['food','פיקניק כשר מהדירה']],kosher:true},
+   {t:'14:15–16:30',title:'Isola Madre — גנים',map:'Isola Madre'},
+   {t:'17:00',title:'חזרה לבוואנו'},
+   {t:'ערב',title:'ארוחה רגועה בבוואנו או סטרזה'}
+  ],
+  meals:{b:'טוסטים עם גבינה צהובה',l:'סלט טונה עם כריך',d:'חזה עוף ופתיתים'},
+  notes:[['park','חניה:','להגיע מוקדם (~9:00) — חניה בתשלום במדחן ליד הרציף.']]},
+
+ {id:'d3',num:"ג'",tag:'טרנטו',icon:I.flower,title:'וילה טרנטו וורבניה',area:'בוואנו → ורבניה → בוואנו',move:'~30 דק׳',
+  steps:[
+   {t:'09:30',title:'יציאה מבוואנו',desc:'נסיעה כ-30 דק׳ אל ורבניה.'},
+   {t:'10:00–12:30',title:'Villa Taranto — גנים בוטניים',map:'Giardini Botanici Villa Taranto Verbania',
+    meta:[['park','עדיף לשלם על חניה קרובה מאשר לחפש חינם (~10 דק׳ נסיעה בתחנה קודמת)']]},
+   {t:'12:45–14:30',title:'Pallanza — טיילת וצהריים',map:'Piazza Garibaldi Verbania',
+    meta:[['park','Parcheggio Piazza Garibaldi Verbania']]},
+   {t:'14:30–16:30',title:'Verbania / Intra — קפה מול האגם'},
+   {t:'17:00',title:'חזרה לבוואנו'},
+   {t:'ערב',title:'שקיעה בבוואנו / סטרזה'}
+  ],
+  meals:{b:'סלט טונה',l:'כריך עם חזה עוף',d:'בולונז עם בשר טחון'},
+  notes:[['faith','כשרות:','ארוחות מהדירה · פיקניק קל לגן.']]},
+
+ {id:'d4',num:"ד'",tag:'אורטה',icon:I.village,title:'אגם אורטה',area:'בוואנו → Orta San Giulio → בוואנו',move:'~55 דק׳',
+  steps:[
+   {t:'09:30',title:'יציאה מבוואנו',desc:'נסיעה כ-55 דק׳ לאגם אורטה.'},
+   {t:'10:30–12:30',title:'שיטוט ב-Orta San Giulio',map:'Orta San Giulio',
+    meta:[['park','Parcheggio Multipiano Orta San Giulio · להיזהר ממצלמות בכניסה לחניה (ZTL)']]},
+   {t:'12:30–13:30',title:'צהריים'},
+   {t:'13:30–15:00',title:'סירה אל Isola San Giulio',map:'Isola San Giulio',
+    meta:[['pin','הסירות יוצאות מ-Piazza Mario Motta — הליכה קצרה ברגל']]},
+   {t:'15:00–16:30',title:'קפה / טיילת / תצפית'},
+   {t:'17:30',title:'חזרה לבוואנו'},
+   {t:'ערב',title:'ערב אחרון רגוע באגם'}
+  ],
+  meals:{b:'טוסט',l:'טורטיות עם חזה עוף',d:'פסטה ושניצל'},
+  notes:[['park','שימו לב:','בכניסה לחניון אורטה יש מצלמות אזור מוגבל (ZTL) — להיכנס רק לחניון המסומן.']]},
+
+ {id:'d5',num:"ה'",tag:'קניות',icon:I.bag,title:'פריימרק וטיסה',area:'בוואנו → Il Centro אָרֶזֶה → מלפנסה',move:'~1:15 לאָרֶזֶה',
+  steps:[
+   {t:'09:30',title:'צ׳ק-אאוט ויציאה מבוואנו'},
+   {t:'10:45–15:30',title:'Primark + Sephora + צהריים בקניון',desc:'קניון Il Centro אָרֶזֶה — פריימרק וגם ספורה.',
+    map:'Primark Il Centro Arese',meta:[['park','Il Centro Arese — חניה חינמית']]},
+   {t:'15:30–16:30',title:'זמן ספייר / עוד קניות / התארגנות'},
+   {t:'16:30–17:15',title:'נסיעה למלפנסה',map:'Malpensa Airport Terminal 1'},
+   {t:'17:15–18:00',title:'החזרת רכב שכור',
+    meta:[['car','להסריט וידאו של הרכב מכל הצדדים לפני ההחזרה; לתדלק אם נדרש בתנאי ההשכרה']]},
+   {t:'18:00–19:00',title:'צ׳ק-אין / ביטחון / התארגנות'},
+   {t:'22:00',title:'טיסה חזרה'}
+  ],
+  meals:{b:'טוסטים',l:'במסעדה',d:'במסעדה'},
+  notes:[['car','החזרת רכב:','בוויז לחפש: שם חברת ההשכרה + Malpensa Car Rental Return. לעקוב אחרי שילוט Autonoleggi / Car Hire.'],
+         ['car','טרמינל 1:','חלק מהחברות מכוונות לחניון P2 ואז שילוט פנימי לחברה.'],
+         ['faith','אוכל כשר:','צהריים וערב — מסעדות כשרות באזור מילאנו.']]}
+];
+
+const LISTS=[
+ {id:'docs',num:'מסמכים',tag:'הכנות',icon:I.doc,title:'מסמכים והכנות',
+  lead:'הוסיפו, מחקו וסמנו פריטים. <b>לא לשכוח את הקודים!</b>',
+  groups:[
+   {h:'להדפיס ולהכין',icon:I.doc,items:[
+     'ביטוח רפואי','אישור הריון','דרכונים (+ עותק במייל)','כרטיסי טיסה',
+     'רישיון נהיגה בינלאומי','כרטיס אשראי מקס + פספורטכארד (עם קוד!)','הזמנת השכרת הרכב']},
+   {h:'לפני היציאה',icon:I.check,items:[
+     'הזמנת מזומן בבנק הפועלים','צ׳ק-אין מוקדם באפליקציה (דרך גלעד)','לסמן בפספורטכארד את עניין העיכוב']},
+   {h:'בנתב״ג ובאיסוף הרכב',icon:I.car,items:[
+     'איסוף כרטיס פספורטכארד + מסלול מהיר + מזומן','15:30 המראה',
+     'איסוף הרכב מיורופקאר: WiFi, צילום והסרטה, בירור דלק וכבישי אגרה']}
+  ]},
+ {id:'food',num:'קניות',tag:'אוכל',icon:I.cart,title:'רשימת קניות אוכל',
+  lead:'הוסיפו ומחקו מצרכים, וסמנו מה שכבר נארז.',
+  groups:[
+   {h:'מצרכים',icon:I.cart,items:[
+     'פיתות','טורטיות','גבינה צהובה 3 ק"ג','חזה עוף 3 ק"ג','רסק עגבניות','חלב עמיד',
+     'קפה','תבלינים','שמן זית','שמן קנולה','חומוס','טחינה','מיונז לחיץ','קופסאות',
+     'נייר אפייה','מרכך שיער לשירה','קוסקוס בשקית','פתיתים','מנות חמות','נודלס להכנה מהירה','פרינגלס','שוקולית']}
+  ]}
+];
+
+/* ---------- STORAGE ---------- */
+const KEY='north_italy_2026_v2';
+let store={checks:{},custom:{},deleted:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){store.checks=s.checks||{};store.custom=s.custom||{};store.deleted=s.deleted||{}}}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}};
+const isOn=id=>!!store.checks[id];
+
+const tabsRow=document.getElementById('tabsRow');
+const panels=document.getElementById('panels');
+let activeTab='d1';
+
+/* ---------- DAY PANELS ---------- */
+DAYS.forEach(day=>{
+  const tab=document.createElement('button');
+  tab.className='tab';tab.setAttribute('role','tab');tab.dataset.target=day.id;
+  tab.innerHTML=`<span class="ring">${svg(I.check)}</span>${svg(day.icon,'ic')}
+    <span class="d-num">${day.num}</span><span class="d-date">${day.tag}</span>`;
+  tab.addEventListener('click',()=>selectTab(day.id));
+  tabsRow.appendChild(tab);
+
+  const panel=document.createElement('section');
+  panel.className='panel';panel.id='panel-'+day.id;panel.setAttribute('role','tabpanel');
+  let html=`<div class="day-head">
+      <h2>יום ${day.num} · ${day.title}</h2>
+      <div class="area">${svg(I.pin)} ${day.area}</div>
+      <div class="badges">
+        <span class="badge move">${svg(I.car)} ${day.move}</span>
+        ${day.cost?`<span class="badge cost">${svg(I.ticket)} ${day.cost}</span>`:''}
+      </div></div>`;
+  day.steps.forEach((s,si)=>{
+    const sid=`${day.id}-s${si}`;
+    const meta=(s.meta||[]).map(m=>`<div class="mline ${m[0]==='food'?'kosher':''}">${svg(I[m[0]],'mi')}<span>${m[1]}</span></div>`).join('');
+    html+=`<div class="step ${isOn(sid)?'done':''}">
+      <div class="step-main">
+        <div class="check" data-check="${sid}" role="checkbox" aria-checked="${isOn(sid)}" tabindex="0" aria-label="סימון: ${s.title}">
+          <span class="box">${svg(I.check)}</span></div>
+        <div class="step-body">
+          ${s.t?`<div class="time">${s.t}</div>`:''}
+          <div class="title">${s.title}</div>
+          ${s.desc?`<div class="desc">${s.desc}</div>`:''}
+          ${meta?`<div class="meta">${meta}</div>`:''}
+          ${s.map?`<a class="nav-btn" href="${maps(s.map)}" target="_blank" rel="noopener">${svg(I.pin)} נווט בגוגל מפות</a>`:''}
+        </div>
+      </div></div>`;
+  });
+  if(day.meals){
+    html+=`<div class="meals"><h3>${svg(I.food)} ארוחות היום</h3>
+      <div class="meal-row"><span class="ml">בוקר</span><span class="mv">${day.meals.b}</span></div>
+      <div class="meal-row"><span class="ml">צהריים</span><span class="mv">${day.meals.l}</span></div>
+      <div class="meal-row"><span class="ml">ערב</span><span class="mv">${day.meals.d}</span></div></div>`;
+  }
+  if(day.notes&&day.notes.length){
+    html+=`<div class="divider">${svg('<path d="M2 7h22M50 7h22"/><circle cx="32" cy="7" r="2"/><circle cx="40" cy="7" r="2.5"/><circle cx="48" cy="7" r="2"/>')}</div>`;
+    html+=`<div class="notes"><h3>הערות וטיפים</h3>`;
+    day.notes.forEach(n=>{html+=`<div class="note-item">${svg(I[n[0]],'ni '+n[0])}<span><b>${n[1]}</b> ${n[2]}</span></div>`});
+    html+=`</div>`;
+  }
+  panel.innerHTML=html;
+  panels.appendChild(panel);
+});
+
+/* ---------- LIST PANELS (editable) ---------- */
+function itemRow(id,text){
+  return `<div class="kit-item ${isOn(id)?'done':''}" data-row="${id}">
+    <div class="kit-tap" data-check="${id}" role="checkbox" aria-checked="${isOn(id)}" tabindex="0">
+      <span class="box">${svg(I.check)}</span><span class="lbl">${esc(text)}</span></div>
+    <button type="button" class="del-btn" data-del="${id}" aria-label="מחיקת פריט">${svg(I.x)}</button>
+  </div>`;
+}
+function renderListGroups(list){
+  return list.groups.map((g,gi)=>{
+    const gkey=`${list.id}-${gi}`;
+    const orig=g.items.map((it,ii)=>({id:`${gkey}-${ii}`,text:it})).filter(o=>!store.deleted[o.id]);
+    const custom=store.custom[gkey]||[];
+    const rows=[...orig,...custom].map(o=>itemRow(o.id,o.text)).join('');
+    return `<div class="kit-group"><h3>${svg(g.icon)} ${g.h}</h3>
+      ${rows}
+      <div class="add-row" data-add="${gkey}">
+        <input type="text" placeholder="הוספת פריט…" aria-label="הוספת פריט ל${g.h}">
+        <button type="button" class="add-btn" aria-label="הוסף">${svg(I.plus)}</button>
+      </div></div>`;
+  }).join('');
+}
+LISTS.forEach(list=>{
+  const tab=document.createElement('button');
+  tab.className='tab';tab.setAttribute('role','tab');tab.dataset.target=list.id;
+  tab.innerHTML=`<span class="ring">${svg(I.check)}</span>${svg(list.icon,'ic')}
+    <span class="d-num" style="font-size:13px">${list.num}</span><span class="d-date">${list.tag}</span>`;
+  tab.addEventListener('click',()=>selectTab(list.id));
+  tabsRow.appendChild(tab);
+
+  const panel=document.createElement('section');
+  panel.className='panel';panel.id='panel-'+list.id;panel.setAttribute('role','tabpanel');
+  panel.innerHTML=`<div class="day-head"><h2>${list.title}</h2>
+      <div class="area">${svg(I.check)} סימון ושינויים נשמרים אוטומטית</div></div>
+    <p class="leadin">${list.lead}</p>
+    <div class="list-progress"><span class="t">הושלם</span><div class="bar2"><i id="bar-${list.id}"></i></div><span class="t" id="pct-${list.id}">0%</span></div>
+    <div id="groups-${list.id}">${renderListGroups(list)}</div>`;
+  panels.appendChild(panel);
+});
+
+/* ---------- SEARCH PANEL ---------- */
+const searchPanel=document.createElement('section');
+searchPanel.className='panel';searchPanel.id='panel-search';searchPanel.setAttribute('role','tabpanel');
+panels.appendChild(searchPanel);
+
+const searchInput=document.getElementById('searchInput');
+const searchClear=document.getElementById('searchClear');
+document.querySelector('.s-ic').innerHTML=svg(I.search);
+searchClear.innerHTML=svg(I.x);
+
+function doSearch(q){
+  const ql=q.toLowerCase();const res=[];
+  DAYS.forEach(day=>day.steps.forEach((s,si)=>{
+    if((s.title+' '+(s.desc||'')).toLowerCase().includes(ql))
+      res.push({id:`${day.id}-s${si}`,text:s.title,sub:s.desc||'',loc:`יום ${day.num} · ${day.title}`,target:day.id,icon:day.icon});
+  }));
+  LISTS.forEach(list=>list.groups.forEach((g,gi)=>{
+    const gkey=`${list.id}-${gi}`;
+    const items=[...g.items.map((it,ii)=>({id:`${gkey}-${ii}`,text:it})).filter(o=>!store.deleted[o.id]),...(store.custom[gkey]||[])];
+    items.forEach(o=>{if(o.text.toLowerCase().includes(ql))
+      res.push({id:o.id,text:o.text,sub:'',loc:`${list.title} · ${g.h}`,target:list.id,icon:list.icon})});
+  }));
+  return res;
+}
+function resultCard(r,q){
+  return `<button class="result-card" data-goto="${r.target}">${svg(r.icon)}
+    <div><div class="r-text ${isOn(r.id)?'done':''}">${hl(r.text,q)}</div>
+    ${r.sub?`<div class="r-sub">${hl(r.sub,q)}</div>`:''}
+    <div class="r-loc">${esc(r.loc)}</div></div></button>`;
+}
+function applySearch(){
+  const q=searchInput.value.trim();
+  searchClear.hidden=!q;
+  if(!q){selectTab(activeTab,true);return;}
+  const res=doSearch(q);
+  searchPanel.innerHTML=`<div class="day-head"><h2>תוצאות חיפוש</h2>
+      <div class="area">${svg(I.search)} ${res.length} ${res.length===1?'תוצאה':'תוצאות'} עבור “${esc(q)}”</div></div>`+
+    (res.length?res.map(r=>resultCard(r,q)).join(''):`<p class="leadin">לא נמצאו תוצאות. נסו מילה אחרת.</p>`);
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-search'));
+  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected','false'));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+searchInput.addEventListener('input',applySearch);
+searchClear.addEventListener('click',()=>{searchInput.value='';applySearch();searchInput.focus();});
+
+/* ---------- ADD / DELETE ---------- */
+function rerenderList(listId){
+  const list=LISTS.find(l=>l.id===listId);
+  const c=document.getElementById('groups-'+listId);
+  if(c)c.innerHTML=renderListGroups(list);
+}
+function addItem(gkey,val){
+  val=(val||'').trim();if(!val)return;
+  if(!store.custom[gkey])store.custom[gkey]=[];
+  store.custom[gkey].push({id:`${gkey}-c${Date.now()}${Math.floor(Math.random()*1000)}`,text:val});
+  save();rerenderList(gkey.split('-')[0]);refresh();
+}
+function deleteItem(id){
+  const gkey=id.split('-').slice(0,2).join('-');
+  const arr=store.custom[gkey]||[];
+  const ci=arr.findIndex(o=>o.id===id);
+  if(ci>=0)arr.splice(ci,1);else store.deleted[id]=true;
+  if(store.checks[id])delete store.checks[id];
+  save();rerenderList(gkey.split('-')[0]);refresh();
+}
+
+/* ---------- CHECK / NAV ---------- */
+function selectTab(id,fromSearch){
+  if(!fromSearch){searchInput.value='';searchClear.hidden=true;}
+  activeTab=id;
+  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.target===id));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+id));
+  const at=[...document.querySelectorAll('.tab')].find(t=>t.dataset.target===id);
+  if(at)at.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function flip(el){
+  const id=el.dataset.check;store.checks[id]=!store.checks[id];if(!store.checks[id])delete store.checks[id];save();
+  const on=isOn(id);el.setAttribute('aria-checked',on);
+  const step=el.closest('.step');if(step)step.classList.toggle('done',on);
+  const kit=el.closest('.kit-item');if(kit)kit.classList.toggle('done',on);
+  refresh();
+}
+document.addEventListener('click',e=>{
+  const del=e.target.closest('[data-del]');if(del){deleteItem(del.dataset.del);return;}
+  const add=e.target.closest('.add-btn');if(add){const row=add.closest('.add-row');const inp=row.querySelector('input');addItem(row.dataset.add,inp.value);inp.value='';return;}
+  const go=e.target.closest('[data-goto]');if(go){selectTab(go.dataset.goto);return;}
+  const c=e.target.closest('[data-check]');if(c){flip(c);return;}
+});
+document.addEventListener('keydown',e=>{
+  if(e.target&&e.target.matches&&e.target.matches('.add-row input')&&e.key==='Enter'){
+    e.preventDefault();const row=e.target.closest('.add-row');addItem(row.dataset.add,e.target.value);e.target.value='';return;
+  }
+  if((e.key===' '||e.key==='Enter')){const c=e.target.closest&&e.target.closest('[data-check]');if(c){e.preventDefault();flip(c)}}
+});
+
+/* ---------- PROGRESS ---------- */
+function refresh(){
+  let tot=0,done=0;
+  DAYS.forEach(day=>{
+    let dt=0,dd=0;
+    day.steps.forEach((s,si)=>{dt++;tot++;if(isOn(`${day.id}-s${si}`)){dd++;done++}});
+    const tab=[...document.querySelectorAll('.tab')].find(t=>t.dataset.target===day.id);
+    if(tab)tab.classList.toggle('complete',dt>0&&dd===dt);
+  });
+  const op=tot?Math.round(done/tot*100):0;
+  document.getElementById('overallBar').style.width=op+'%';
+  document.getElementById('overallPct').textContent=op+'%';
+  const sunEl=document.querySelector('.hero .sun');
+  if(sunEl)sunEl.setAttribute('transform',`translate(0,${80-(op/100)*90})`);
+
+  LISTS.forEach(list=>{
+    let lt=0,ld=0;
+    list.groups.forEach((g,gi)=>{
+      const gkey=`${list.id}-${gi}`;
+      g.items.forEach((it,ii)=>{const id=`${gkey}-${ii}`;if(!store.deleted[id]){lt++;if(isOn(id))ld++}});
+      (store.custom[gkey]||[]).forEach(o=>{lt++;if(isOn(o.id))ld++});
+    });
+    const lp=lt?Math.round(ld/lt*100):0;
+    const bar=document.getElementById('bar-'+list.id),pct=document.getElementById('pct-'+list.id);
+    if(bar)bar.style.width=lp+'%';if(pct)pct.textContent=lp+'%';
+    const tab=[...document.querySelectorAll('.tab')].find(t=>t.dataset.target===list.id);
+    if(tab)tab.classList.toggle('complete',lt>0&&ld===lt);
+  });
+}
+
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  if(confirm('לאפס את כל הסימונים? (פריטים שהוספתם יישארו)')){
+    store.checks={};save();
+    document.querySelectorAll('.done').forEach(el=>el.classList.remove('done'));
+    document.querySelectorAll('[data-check]').forEach(el=>el.setAttribute('aria-checked','false'));
+    refresh();
+  }
+});
+
+selectTab('d1');
+refresh();
+</script>
+</body>
+</html>
